@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const tempMovieData = [
   {
@@ -47,19 +47,62 @@ const tempWatchedData = [
   },
 ];
 
+const KEY = "2baf159f";
+
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [query, setQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const tempQuery = "interstellar";
+
+  useEffect(
+    function () {
+      async function fetchMovies() {
+        try {
+          setIsLoading(true);
+          setError("");
+          const res = await fetch(
+            `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`
+          );
+
+          if (!res.ok) {
+            throw new Error("Something went wrong!!!");
+          }
+
+          const data = await res.json();
+          if (data.Response === "False") {
+            throw new Error("Movie not found!!!");
+          }
+
+          setMovies(data.Search);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      if (!query.length) {
+        setMovies([]);
+        setError("");
+      }
+      fetchMovies();
+    },
+    [query]
+  );
 
   return (
     <>
       <NavBar>
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <NumResult movies={movies} />
       </NavBar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <Error message={error} />}
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
@@ -67,6 +110,19 @@ export default function App() {
         </Box>
       </Main>
     </>
+  );
+}
+
+function Loader() {
+  return <p className="loader">Loading...</p>;
+}
+
+function Error({ message }) {
+  return (
+    <p className="error">
+      <span>💥</span>
+      {message}
+    </p>
   );
 }
 
@@ -88,8 +144,7 @@ function Logo() {
   );
 }
 
-function Search() {
-  const [query, setQuery] = useState("");
+function Search({ query, setQuery }) {
   return (
     <input
       className="search"
@@ -104,7 +159,7 @@ function Search() {
 function NumResult({ movies }) {
   return (
     <p className="num-results">
-      Found <strong>{movies.length}</strong> results
+      {/* Found <strong>{movies.length}</strong> results */}
     </p>
   );
 }
