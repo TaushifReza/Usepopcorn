@@ -64,29 +64,34 @@ export default function App() {
           setIsLoading(true);
           setError("");
           const res = await fetch(
-            `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
           );
 
           if (!res.ok) {
-            throw new Error("Something went wrong!!!");
+            throw new Error("Something went wrong with fetching movies");
           }
 
           const data = await res.json();
-          if (data.Response === "False") {
-            throw new Error("Movie not found!!!");
-          }
+          console.log(data);
+          console.log(data.Response);
+          console.log(data.Error);
+          if (data.Response === "False") throw new Error("Movie not found");
 
           setMovies(data.Search);
         } catch (err) {
+          console.error(err);
           setError(err.message);
         } finally {
           setIsLoading(false);
         }
       }
-      if (!query.length) {
+
+      if (query.length < 3) {
         setMovies([]);
         setError("");
+        return;
       }
+
       fetchMovies();
     },
     [query]
@@ -159,7 +164,7 @@ function Search({ query, setQuery }) {
 function NumResult({ movies }) {
   return (
     <p className="num-results">
-      {/* Found <strong>{movies.length}</strong> results */}
+      Found <strong>{movies?.length}</strong> results
     </p>
   );
 }
