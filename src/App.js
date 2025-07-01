@@ -369,7 +369,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
           <section>
             <div className="rating">
-              {watched.some((movie) => movie.imdbID === selectedId) ? (
+              {(watched || []).some((movie) => movie.imdbID === selectedId) ? (
                 <p>You rated this movie ⭐ {watchedUserrating}</p>
               ) : (
                 <StarRating
