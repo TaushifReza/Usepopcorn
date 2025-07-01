@@ -260,7 +260,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     [userRating]
   );
 
-  const watchedUserrating = watched.find(
+  const watchedUserrating = (watched || []).find(
     (movie) => movie.imdbID === selectedId
   )?.userRating;
 
