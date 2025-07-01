@@ -74,7 +74,7 @@ export default function App() {
         }
       }
 
-      if (query.length < 3) {
+      if (query?.length < 3) {
         setMovies([]);
         setError("");
         return;
@@ -411,7 +411,7 @@ function WatchedSummary({ watched }) {
       <div>
         <p>
           <span>#️⃣</span>
-          <span>{watched.length} movies</span>
+          <span>{watched?.length} movies</span>
         </p>
         <p>
           <span>⭐️</span>
@@ -474,4 +474,4 @@ function WatchedMovie({ movie, onDeleteWatched }) {
 }
 
 const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+  arr.reduce((acc, cur, i, arr) => acc + cur / arr?.length, 0);
