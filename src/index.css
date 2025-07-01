@@ -54,8 +54,15 @@ body {
   max-width: 42rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
-  /* overflow: scroll; */
+  overflow: auto;
   position: relative;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.box::-webkit-scrollbar {
+  display: none;
 }
 
 .loader {
@@ -138,7 +145,14 @@ body {
 .list {
   list-style: none;
   padding: 0.8rem 0;
-  /* overflow: scroll; */
+  overflow: scroll;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
 }
 
 .list-watched {
